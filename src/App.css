@@ -1,0 +1,138 @@
+/* Root variables */
+:root {
+  --color-primary: #0f2f24;
+  --color-light: #f7f6f2;
+  --color-accent: #c9a240;
+  --color-text: #2b2b2b;
+  --color-border: #e4e2dc;
+  --color-secondary: #3a5f52;
+
+  --transition: all 0.6s ease;
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom background */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+section#hero{margin-top: -62px;}
+
+/* Base typography */
+body,
+p,
+li {
+  transition: var(--transition);
+  font-family: "Inter", sans-serif;
+}
+
+a {
+  transition: var(--transition);
+}
+
+input,
+select,
+button,
+textarea {
+  display: flex;
+  resize: none;
+  outline: none;
+  border: 1px solid;
+  font-weight: 500;
+  transition: var(--transition);
+  font-family: "DM Sans", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: 2rem;
+  font-family: "DM Sans", sans-serif;
+  font-weight: bold;
+}
+
+button {
+  border-color: transparent;
+}
+
+/* Home hero */
+.hero-text h1 {
+  margin-bottom: 0.6rem;
+}
+.hero-text p {
+  margin-bottom: 1.2rem;
+}
+.hero-links a {
+  padding: 0.8rem 1rem;
+}
+
+/* Container */
+.container {
+  width: 80%;
+  margin: 0 auto;
+  max-width: 1200px;
+  position: relative;
+}
+
+/* Buttons */
+.button {
+  border-color: transparent;
+}
+
+/* Car card */
+.car-card {
+  padding: 2rem;
+}
+.car-card .button {
+  margin-top: 0.6rem;
+  padding: 0.3rem 0.6rem;
+}
+
+/* Car modal */
+.car-modal-1 {
+  padding: 1rem;
+}
+
+/* Car details */
+.car-detail-items {
+  position: relative;
+}
+.car-detail-items p {
+  margin-bottom: 0.2rem;
+}
+.car-detail-items h2 {
+  margin-bottom: 0.6rem;
+}
+.car-detail-items .mb-6 {
+  margin-bottom: 0.8rem;
+}
+.car-detail-items .py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+/* Buttons */
+button.p-2 {
+  padding: 0.5rem;
+}
+
+/* Booking modal */
+.booking-modal {
+  position: relative;
+  padding: 1rem;
+}
+.booking-modal .mb-8 {
+  margin-bottom: 2rem;
+}
+.booking-modal .mt-4 {
+  margin-top: 1rem;
+}
+
