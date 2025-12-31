@@ -1,61 +1,14 @@
-import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { assets } from "../assets/assets";
 import { LuSearch, LuTickets } from "react-icons/lu";
 
 import "./../style/component.scss";
 import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
-import {
-  ChevronDownIcon,
-  PhoneIcon,
-  PlayCircleIcon,
-} from "@heroicons/react/20/solid";
-import {
-  ArrowPathIcon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
-} from "@heroicons/react/24/outline";
+import { PhoneIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
+
 import { IoCarSportOutline, IoInformation } from "react-icons/io5";
 import { TbMap2 } from "react-icons/tb";
-
-const solutions = [
-  {
-    name: "Analytics",
-    description: "Get a better understanding of your traffic",
-    href: "#",
-    icon: ChartPieIcon,
-  },
-  {
-    name: "Engagement",
-    description: "Speak directly to your customers",
-    href: "#",
-    icon: CursorArrowRaysIcon,
-  },
-  {
-    name: "Security",
-    description: "Your customers' data will be safe and secure",
-    href: "#",
-    icon: FingerPrintIcon,
-  },
-  {
-    name: "Integrations",
-    description: "Connect with third-party tools",
-    href: "#",
-    icon: SquaresPlusIcon,
-  },
-  {
-    name: "Automations",
-    description: "Build strategic funnels that will convert",
-    href: "#",
-    icon: ArrowPathIcon,
-  },
-];
-const callsToAction = [
-  { name: "Watch demo", href: "#", icon: PlayCircleIcon },
-  { name: "Contact sales", href: "#", icon: PhoneIcon },
-];
+import { useEffect, useState } from "react";
 
 const sections = ["cars", "tours", "about", "contact"];
 const menuItems = [
@@ -84,6 +37,34 @@ const menuItems = [
 const Navbar = () => {
   const { hash } = useLocation();
 
+  const sections = ["cars", "tours", "about", "contact"];
+  const [activeSection, setActiveSection] = useState("");
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { root: null, rootMargin: "0px", threshold: 0.5 } // 50% visible
+    );
+
+    sections.forEach((id) => {
+      const section = document.getElementById(id);
+      if (section) observer.observe(section);
+    });
+
+    return () => {
+      sections.forEach((id) => {
+        const section = document.getElementById(id);
+        if (section) observer.unobserve(section);
+      });
+    };
+  }, []);
+
   return (
     <>
       <div className="header">
@@ -98,12 +79,13 @@ const Navbar = () => {
             <ul className="menu">
               {sections.map((id) => (
                 <li key={id}>
-                  <Link
-                    to={`/#${id}`}
-                    className={hash === `#${id}` ? "active" : ""}
+                  <a
+                    href={`/#${id}`}
+                    // className={hash === `#${id}` ? "active" : ""}
+                    className={activeSection === id ? "active" : ""}
                   >
                     <span>{id}</span>
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
