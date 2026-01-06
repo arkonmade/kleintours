@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CuratedExperienceStrip } from "../curated-experience-strip";
 import { TourModal } from "../modals/tour-modal";
+import { supabase } from "../../lib/supabase";
 
 const SAMPLE_TOURS = [
   {
@@ -80,6 +81,48 @@ const SAMPLE_TOURS = [
 export function ToursSection() {
   const [selectedTour, setSelectedTour] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tours, setTours] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const fetchTours = async () => {
+      setLoading(true);
+
+      const { data, error } = await supabase
+        .from("tours")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        setError(error.message);
+        console.log(error);
+      } else {
+        setTours(data);
+      }
+      setLoading(false);
+    };
+
+    fetchTours();
+  }, []);
+
+  if (loading)
+    return (
+      <>
+        <CuratedExperienceStrip
+          items={[]}
+          onItemClick
+          title={"Guided Tours & Experiences"}
+          loading={true}
+        />
+      </>
+    );
+  if (error)
+    return (
+      <>
+        <p>Error: {error}</p>
+      </>
+    );
 
   const handleSelectTour = (tour) => {
     setSelectedTour(tour);
@@ -89,12 +132,13 @@ export function ToursSection() {
   return (
     <section id="tours" className="bg-[#f7f6f2]">
       <CuratedExperienceStrip
-        items={SAMPLE_TOURS}
+        items={tours}
         title="Guided Tours & Experiences"
         onItemClick={handleSelectTour}
       />
       {selectedTour && (
         <TourModal
+          tours={tours}
           tour={selectedTour}
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}

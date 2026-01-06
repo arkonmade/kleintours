@@ -1,17 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, MapPinned } from "lucide-react";
+import { CarFront, ChevronLeft, ChevronRight, Cog } from "lucide-react";
 import { Button } from "./ui/button.jsx";
 import CardSkeletonLoader from "./SkeletonLoader.jsx";
 
 export function CuratedExperienceStrip({
-  items = [],
+  items = [], // default to empty array to prevent crashes
   loading = false,
   onItemClick,
-  title,
+  title = "",
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
+  const scrollRef = useRef(null);
 
   const itemsLength = items.length;
 
@@ -21,7 +22,7 @@ export function CuratedExperienceStrip({
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % itemsLength);
-    }, 5000);
+    }, 15000);
 
     return () => clearInterval(interval);
   }, [isAutoPlay, itemsLength]);
@@ -183,9 +184,9 @@ export function CuratedExperienceStrip({
   );
 }
 
-// Updated ExperienceCard with safe image fallback
+// ExperienceCard remains mostly the same
 function ExperienceCard({ item, isCenter, onClick, onDetailClick }) {
-  if (!item) return null;
+  if (!item) return null; // safe guard
 
   return (
     <motion.div
@@ -204,7 +205,6 @@ function ExperienceCard({ item, isCenter, onClick, onDetailClick }) {
           isCenter ? "grayscale-0 blur-0" : "grayscale blur-sm"
         } group-hover:grayscale-0 group-hover:blur-0`}
       />
-
       <div
         className={`absolute inset-0 transition-all duration-300 ${
           isCenter
@@ -219,15 +219,26 @@ function ExperienceCard({ item, isCenter, onClick, onDetailClick }) {
           animate={isCenter ? { opacity: 1, y: 0 } : { opacity: 0.5, y: 5 }}
           transition={{ duration: 0.5 }}
         >
-          {item.location && (
+          <div className="flex flex-wrap gap-2">
             <div className="flex mb-2 gap-1">
-              <MapPinned className="size-4 text-[#c9a240]" />
+              <CarFront className="size-4 text-[#c9a240]" />
               <p className="text-[#c9a240] text-sm font-semibold capitalize tracking-wide">
-                {item.location}
+                {item.category}
               </p>
             </div>
-          )}
-          <h3 className="text-white text-2xl font-bold mb-3">{item.name}</h3>
+            {item.transmission && (
+              <div className="flex mb-2 gap-1">
+                <Cog className="size-4 text-[#c9a240]" />
+                <p className="text-[#c9a240] text-sm font-semibold capitalize tracking-wide">
+                  {item.transmission}
+                </p>
+              </div>
+            )}
+          </div>
+
+          <h3 className="text-white text-2xl font-bold mb-3">
+            {item.title || item.name}
+          </h3>
 
           {isCenter && (
             <motion.div

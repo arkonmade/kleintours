@@ -10,6 +10,8 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { Button } from "../ui/button";
+import { supabase } from "../../lib/supabase";
+import toast from "react-hot-toast";
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
@@ -18,6 +20,7 @@ export function ContactSection() {
     phone: "",
     message: "",
   });
+
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,17 +48,39 @@ export function ContactSection() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!validateForm()) return;
 
     setIsLoading(true);
-    setTimeout(() => {
-      setIsSubmitted(true);
+    const toastId = toast.loading("Sending message...");
+
+    try {
+      const { data, error } = await supabase.from("messages").insert([
+        {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || null,
+          message: formData.message,
+        },
+      ]);
+
+      if (error) {
+        toast.error("Failed to send message: " + error.message, {
+          id: toastId,
+        });
+      } else {
+        setIsSubmitted(true);
+        setFormData({ name: "", email: "", phone: "", message: "" });
+        toast.success("Message sent successfully!", { id: toastId });
+        setTimeout(() => setIsSubmitted(false), 4000);
+      }
+    } catch (err) {
+      toast.error("Something went wrong. Please try again.", { id: toastId });
+    } finally {
       setIsLoading(false);
-      setFormData({ name: "", email: "", phone: "", message: "" });
-      setTimeout(() => setIsSubmitted(false), 4000);
-    }, 1500);
+    }
   };
 
   const containerVariants = {

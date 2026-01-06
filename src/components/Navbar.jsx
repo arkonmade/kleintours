@@ -96,12 +96,13 @@ const Navbar = () => {
                 <LuSearch />
               </span>
             </button>
-            <button className="book">
+            <a
+                    href={`/#tours`} className="book">
               <span>
                 <LuTickets />
               </span>
               <span className="txt">Book Experience</span>
-            </button>
+            </a>
             <Popover className="relative">
               {({ open }) => (
                 <>

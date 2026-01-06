@@ -1,16 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
-import { CuratedExperienceStrip } from "../curated-experience-strip";
+import React, { useEffect, useState } from "react";
 import { CarModal } from "../modals/car-modal";
+import { supabase } from "../../lib/supabase";
+import { CuratedExperienceStrip } from "../curated-car-strip";
 
 const SAMPLE_CARS = [
   {
     id: "car-1",
     name: "Toyota Land Cruiser",
     category: "Safari 4x4",
-    image:
-      "https://tse3.mm.bing.net/th/id/OIP.nKVgeWNbfGFvetrFp1qc9wHaEK",
+    image: "https://tse3.mm.bing.net/th/id/OIP.nKVgeWNbfGFvetrFp1qc9wHaEK",
     description:
       "Legendary full-size 4x4 known for durability, high ground clearance, and exceptional off-road performance. Widely used for safaris and rugged expeditions.",
     seats: 7,
@@ -65,6 +65,51 @@ const SAMPLE_CARS = [
 export function CarsSection() {
   const [selectedCar, setSelectedCar] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cars, setCars] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      setLoading(true);
+
+      const {
+        data,
+        error,
+      } = await supabase
+        .from("cars")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        setError(error.message);
+        console.log(error);
+      } else {
+        setCars(data);
+      }
+      setLoading(false);
+    };
+
+    fetchCars();
+  }, []);
+
+  if (loading)
+    return (
+      <>
+        <CuratedExperienceStrip
+          items={[]}
+          onItemClick
+          title={"The Drive"}
+          loading={true}
+        />
+      </>
+    );
+  if (error)
+    return (
+      <>
+        <p>Error: {error}</p>
+      </>
+    );
 
   const handleSelectCar = (car) => {
     setSelectedCar(car);
@@ -76,12 +121,14 @@ export function CarsSection() {
       <div className="container">
         <section id="cars" className=" bg-[#f7f6f2]">
           <CuratedExperienceStrip
-            items={SAMPLE_CARS}
+            items={cars}
             title="The Drive"
+            loading={false}
             onItemClick={handleSelectCar}
           />
           {selectedCar && (
             <CarModal
+              cars={cars}
               car={selectedCar}
               isOpen={isModalOpen}
               onClose={() => setIsModalOpen(false)}

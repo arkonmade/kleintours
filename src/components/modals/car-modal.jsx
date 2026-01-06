@@ -1,69 +1,20 @@
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Users, Zap, Gauge } from "lucide-react";
 import { Button } from "../ui/button";
 import { BookingModal } from "./booking-modal";
 
-const CAR_DETAILS = {
-  "car-1": {
-    // Toyota Prado TXL (The Rwanda Workhorse)
-    passengers: 5,
-    transmission: "Automatic",
-    fuel: "Diesel",
-    images: [
-      "https://images.unsplash.com/photo-1594563703937-fdc640497dcd?w=800&q=80", // White Prado Front
-      "https://images.unsplash.com/photo-1625047509168-a7026f36de04?w=800&q=80", // Modern SUV Dashboard
-      "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?w=800&q=80", // Off-road Detail
-    ],
-  },
-  "car-2": {
-    // Toyota RAV4 / Hybrid SUV
-    passengers: 4,
-    transmission: "Automatic",
-    fuel: "Hybrid",
-    images: [
-      "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=800&q=80", // White RAV4 Exterior
-      "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=800&q=80", // SUV Interior/Cockpit
-      "https://images.unsplash.com/photo-1566367576585-051277d52997?w=800&q=80", // Profile View
-    ],
-  },
-  "car-3": {
-    // Toyota Land Cruiser 300 (7-Seater)
-    passengers: 7,
-    transmission: "Automatic",
-    fuel: "Petrol",
-    images: [
-      "https://images.unsplash.com/photo-1626012356515-460f47e30739?w=800&q=80", // LC300 Front Profile
-      "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80", // Rear/Side View
-      "https://images.unsplash.com/photo-1506469717960-433cebe3f181?w=800&q=80", // Luxury SUV Leather Seats
-    ],
-  },
-  "car-4": {
-    // Toyota Fortuner (Manual/Rugged)
-    passengers: 5,
-    transmission: "Manual",
-    fuel: "Diesel",
-    images: [
-      "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&q=80", // Off-road SUV Side
-      "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=800&q=80", // Front Close-up
-      "https://images.unsplash.com/photo-1533473359331-35ad069e7d94?w=800&q=80", // Mountain terrain action
-    ],
-  },
-};
-
-export function CarModal({ car, isOpen, onClose }) {
+export function CarModal({ car, cars, isOpen, onClose }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const details = CAR_DETAILS[car.id] || CAR_DETAILS["car-1"];
 
   const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % details.images.length);
+    setCurrentImageIndex((prev) => (prev + 1) % car.images.length);
   };
 
   const handlePrevImage = () => {
     setCurrentImageIndex(
-      (prev) => (prev - 1 + details.images.length) % details.images.length
+      (prev) => (prev - 1 + car.images.length) % car.images.length
     );
   };
 
@@ -100,7 +51,7 @@ export function CarModal({ car, isOpen, onClose }) {
                     <div className="relative h-96 bg-[#e4e2dc] rounded-2xl overflow-hidden mb-4">
                       <motion.img
                         key={currentImageIndex}
-                        src={details.images[currentImageIndex]}
+                        src={car.images[currentImageIndex]}
                         alt={`${car.name} view ${currentImageIndex + 1}`}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -123,7 +74,7 @@ export function CarModal({ car, isOpen, onClose }) {
                       </button>
 
                       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
-                        {details.images.map((_, index) => (
+                        {car.images.map((_, index) => (
                           <button
                             key={index}
                             onClick={() => setCurrentImageIndex(index)}
@@ -148,7 +99,7 @@ export function CarModal({ car, isOpen, onClose }) {
                         {car.category}
                       </p>
                       <h2 className="text-4xl font-bold text-foreground mb-4">
-                        {car.name}
+                        {car.title}
                       </h2>
                       <p className="text-muted-foreground leading-relaxed mb-6">
                         {car.description}
@@ -162,7 +113,7 @@ export function CarModal({ car, isOpen, onClose }) {
                               Passengers
                             </p>
                             <p className="font-semibold text-[#0f2f24]">
-                              {details.passengers}
+                              {car.seats} {car.seats > 1 ? "seats" : "seat"}
                             </p>
                           </div>
                         </div>
@@ -173,7 +124,7 @@ export function CarModal({ car, isOpen, onClose }) {
                               Transmission
                             </p>
                             <p className="font-semibold text-[#0f2f24] text-sm">
-                              {details.transmission}
+                              {car.transmission}
                             </p>
                           </div>
                         </div>
@@ -182,7 +133,7 @@ export function CarModal({ car, isOpen, onClose }) {
                           <div>
                             <p className="text-xs text-[#2b2b2b]/80">Fuel</p>
                             <p className="font-semibold text-[#0f2f24] text-sm">
-                              {details.fuel}
+                              {car.fuel_type}
                             </p>
                           </div>
                         </div>
