@@ -4,7 +4,10 @@ const hero2 =
 
 import logo from "/brand/logo.svg";
 import logo1 from "/brand/logo.jpg";
-import mainLogo from "/josue.jpg"
+import mainLogo from "/josue.jpg";
+
+import gridshape from "/img/grid-01.svg";
+import error from "/img/404.svg";
 
 export const assets = {
   bg: {
@@ -14,11 +17,17 @@ export const assets = {
   },
 
   brand: {
-    logo,logo1,
+    logo,
+    logo1,
     mainLogo,
   },
 
   alt: {
     text: "Visit Rwanda with Klein Transports & Tours | ",
+  },
+
+  img: {
+    gridshape,
+    error,
   },
 };
